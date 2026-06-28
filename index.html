@@ -1,0 +1,3658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAST VIBE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        /* ═══════════════════════════════════════
+           DESIGN TOKENS
+        ═══════════════════════════════════════ */
+        :root {
+            --ink: #050608;
+            --deep: #040710;
+            --surface: #141829;
+            --raised: #1C202F;
+            --edge: #272D47;
+            --outline: #313857;
+            --subtle: #4A5178;
+            --muted: #7B85B3;
+            --dim: #99A3C1;
+            --body: #D8DDF0;
+            --bright: #F5F7FF;
+
+            --fire: #FF6B6B;
+            --ember: #FF9850;
+            --gold: #FFD93D;
+            --lime: #4AE8A0;
+            --sky: #4DCFF8;
+            --violet: #9B6FFF;
+            --lavender: #B89FFF;
+            --rose: #FF7FA0;
+
+            --grad-ai: linear-gradient(135deg, #9B6FFF 0%, #7B5FFF 50%, #6366F1 100%);
+            --grad-fire: linear-gradient(135deg, #FF6B6B, #FF9850);
+            --grad-lime: linear-gradient(135deg, #4AE8A0, #2DD4A4);
+            --grad-sky: linear-gradient(135deg, #4DCFF8, #3DB8FF);
+            --grad-gold: linear-gradient(135deg, #FFD93D, #FFC52A);
+
+            --font-display: 'Bricolage Grotesque', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --r-sm: 8px;
+            --r-md: 12px;
+            --r-lg: 16px;
+            --r-xl: 24px;
+            --r-full: 99px;
+
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, .25);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, .35);
+            --shadow-lg: 0 12px 48px rgba(0, 0, 0, .4);
+            --shadow-glow: 0 0 32px rgba(155, 111, 255, .3);
+        }
+
+        *, *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            font-size: 15px;
+        }
+        body {
+            background-color: var(--ink);
+            color: var(--body);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            overflow: hidden;
+            height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: 0.3px;
+        }
+        button {
+            font-family: var(--font-body);
+            cursor: pointer;
+        }
+        input,
+        textarea,
+        select {
+            font-family: var(--font-body);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--edge);
+            border-radius: 99px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--subtle);
+        }
+
+        .shell {
+            display: grid;
+            grid-template-columns: 72px 220px 1fr;
+            grid-template-rows: 100vh;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ── rail ── */
+        .rail {
+            background: var(--deep);
+            border-right: 1px solid var(--edge);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 0;
+            gap: 4px;
+            z-index: 20;
+        }
+        .rail-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--r-md);
+            background: var(--grad-ai);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-glow);
+            flex-shrink: 0;
+        }
+        .rail-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--r-md);
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all .18s;
+            position: relative;
+            cursor: pointer;
+        }
+        .rail-btn:hover {
+            background: var(--raised);
+            color: var(--body);
+        }
+        .rail-btn.active {
+            background: rgba(139, 92, 246, .15);
+            border-color: rgba(139, 92, 246, .3);
+            color: var(--lavender);
+        }
+        .rail-btn .rail-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--fire);
+            border: 1.5px solid var(--deep);
+        }
+        .rail-divider {
+            width: 28px;
+            height: 1px;
+            background: var(--edge);
+            margin: 8px 0;
+        }
+        .rail-avatar {
+            margin-top: auto;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--grad-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ink);
+            cursor: pointer;
+            border: 2px solid var(--edge);
+        }
+
+        /* ── sidebar ── */
+        .sidebar {
+            background: var(--deep);
+            border-right: 1px solid var(--edge);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .sidebar-head {
+            padding: 18px 16px 12px;
+            border-bottom: 1px solid var(--edge);
+        }
+        .sidebar-head h2 {
+            font-family: var(--font-display);
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--bright);
+            letter-spacing: -.3px;
+            letter-spacing: -.4px;
+        }
+        .sidebar-head p {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .streak-widget {
+            margin: 12px 12px 0;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, rgba(245, 200, 66, .08), rgba(249, 115, 22, .06));
+            background: linear-gradient(135deg, rgba(255, 199, 43, .08), rgba(255, 160, 61, .06));
+            border: 1px solid rgba(245, 200, 66, .2);
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .streak-fire {
+            font-size: 20px;
+        }
+        .streak-val {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--gold);
+            line-height: 1;
+        }
+        .streak-label {
+            font-size: 10px;
+            color: var(--muted);
+        }
+        .nav-group {
+            padding: 14px 10px 4px;
+        }
+        .nav-group-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--subtle);
+            padding: 0 6px 6px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 10px;
+            border-radius: var(--r-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            transition: all .15s;
+            position: relative;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .nav-item:hover {
+            background: var(--raised);
+            color: var(--body);
+        }
+        .nav-item.active {
+            background: rgba(139, 92, 246, .12);
+            border-color: rgba(139, 92, 246, .25);
+            color: var(--lavender);
+            font-weight: 600;
+        }
+        .nav-icon {
+            font-size: 15px;
+            width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .nav-badge {
+            margin-left: auto;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: var(--r-full);
+            flex-shrink: 0;
+        }
+        .nav-badge.red {
+            background: rgba(255, 92, 92, .15);
+            color: var(--fire);
+        }
+        .nav-badge.green {
+            background: rgba(61, 221, 138, .12);
+            color: var(--lime);
+        }
+        .nav-badge.blue {
+            background: rgba(56, 196, 240, .12);
+            color: var(--sky);
+        }
+        .nav-badge.gray {
+            background: var(--raised);
+            color: var(--dim);
+        }
+
+        .focus-widget {
+            margin: 12px;
+            padding: 12px;
+            background: var(--raised);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-lg);
+        }
+        .focus-widget-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+        .focus-timer-display {
+            font-family: var(--font-mono);
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--bright);
+            color: var(--body);
+            text-align: center;
+            letter-spacing: .05em;
+        }
+        .focus-timer-display.running {
+            color: var(--lime);
+        }
+        .focus-timer-display.break-mode {
+            color: var(--sky);
+        }
+        .focus-btns {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .focus-btn {
+            flex: 1;
+            padding: 6px;
+            border-radius: var(--r-sm);
+            border: 1px solid var(--edge);
+            background: var(--surface);
+            color: var(--body);
+            font-size: 11px;
+            font-weight: 600;
+            transition: all .15s;
+        }
+        .focus-btn:hover {
+            background: var(--edge);
+        }
+        .focus-btn.primary {
+            background: var(--grad-ai);
+            border-color: transparent;
+            color: white;
+        }
+        .focus-progress {
+            width: 100%;
+            height: 3px;
+            background: var(--edge);
+            border-radius: 99px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .focus-progress-fill {
+            height: 100%;
+            background: var(--grad-ai);
+            border-radius: 99px;
+            transition: width .5s;
+        }
+
+        /* ── main ── */
+        .main {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--ink);
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: 56px;
+            border-bottom: 1px solid var(--edge);
+            background: var(--deep);
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .topbar-title {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--bright);
+            color: var(--dim);
+            letter-spacing: -.2px;
+        }
+        .search-bar {
+            flex: 1;
+            max-width: 360px;
+            background: var(--raised);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-full);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 14px;
+            transition: border-color .2s;
+        }
+        .search-bar:focus-within {
+            border-color: var(--violet);
+        }
+        .search-icon {
+            font-size: 13px;
+            color: var(--muted);
+        }
+        .search-input {
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            color: var(--bright);
+            color: var(--body);
+            width: 100%;
+            padding: 8px 0;
+        }
+        .search-input::placeholder {
+            color: var(--muted);
+        }
+        .topbar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .topbar-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: var(--r-full);
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .topbar-pill.urgent {
+            background: rgba(255, 92, 92, .08);
+            border-color: rgba(255, 92, 92, .25);
+            color: var(--fire);
+        }
+        .topbar-pill.urgent:hover {
+            background: rgba(255, 92, 92, .15);
+        }
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 1.6s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: .5;
+                transform: scale(1.4);
+            }
+        }
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--r-md);
+            border: 1px solid var(--edge);
+            background: transparent;
+            color: var(--muted);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .15s;
+            cursor: pointer;
+        }
+        .icon-btn:hover {
+            background: var(--raised);
+            color: var(--body);
+        }
+        .icon-btn.settings-btn:hover {
+            border-color: var(--violet);
+            color: var(--lavender);
+        }
+
+        .panel-wrap {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        .panel {
+            position: absolute;
+            inset: 0;
+            overflow-y: auto;
+            display: none;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity .2s, transform .2s;
+        }
+        .panel.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .panel.chat-layout {
+            display: none;
+            flex-direction: column;
+        }
+        .panel.chat-layout.active {
+            display: flex;
+            opacity: 1;
+            transform: none;
+        }
+
+        /* ── dashboard ── */
+        .dash-wrap {
+            padding: 24px;
+            max-width: 1200px;
+        }
+        .dash-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .dash-greeting {
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--bright);
+            color: var(--dim);
+            letter-spacing: -.5px;
+            line-height: 1.15;
+        }
+        .dash-greeting em {
+            font-style: normal;
+            background: var(--grad-ai);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .dash-date {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .score-ring-wrap {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+        .score-ring-wrap svg {
+            transform: rotate(-90deg);
+        }
+        .score-val {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .score-num {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--bright);
+            color: var(--dim);
+            line-height: 1;
+        }
+        .score-label {
+            font-size: 9px;
+            color: var(--muted);
+            font-weight: 600;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-lg);
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            cursor: pointer;
+            transition: border-color .2s, transform .15s;
+        }
+        .stat-card:hover {
+            border-color: var(--subtle);
+            transform: translateY(-1px);
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--card-accent, var(--violet));
+        }
+        .stat-emoji {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .stat-val {
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--bright);
+            color: var(--dim);
+            line-height: 1;
+        }
+        .stat-val span {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--muted);
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        .stat-delta {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .stat-delta.up {
+            color: var(--lime);
+        }
+        .stat-delta.down {
+            color: var(--fire);
+        }
+        .stat-delta.warn {
+            color: var(--gold);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+        }
+        .card-head {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--edge);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--bright);
+            color: var(--dim);
+            flex: 1;
+        }
+        .card-tag {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: var(--r-full);
+            background: rgba(139, 92, 246, .15);
+            color: var(--lavender);
+            border: 1px solid rgba(139, 92, 246, .25);
+        }
+        .card-btn {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--lavender);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: color .15s;
+        }
+        .card-btn:hover {
+            color: var(--violet);
+        }
+
+        .task-filters {
+            display: flex;
+            gap: 6px;
+            padding: 10px 18px;
+            border-bottom: 1px solid var(--edge);
+            overflow-x: auto;
+        }
+        .filter-pill {
+            padding: 4px 12px;
+            border-radius: var(--r-full);
+            border: 1px solid var(--edge);
+            background: transparent;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .15s;
+        }
+        .filter-pill:hover {
+            background: var(--raised);
+            color: var(--body);
+        }
+        .filter-pill.active {
+            background: rgba(139, 92, 246, .15);
+            border-color: rgba(139, 92, 246, .3);
+            color: var(--lavender);
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            border-bottom: 1px solid rgba(46, 52, 85, .5);
+            cursor: pointer;
+            transition: background .12s;
+            position: relative;
+        }
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        .task-item:hover {
+            background: rgba(24, 28, 48, .6);
+        }
+        .task-item.overdue {
+            border-left: 3px solid var(--fire);
+        }
+        .task-item.done {
+            opacity: .5;
+        }
+
+        .task-cb {
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            border: 2px solid var(--outline);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .15s;
+            cursor: pointer;
+            position: relative;
+        }
+        .task-cb.checked {
+            background: var(--lime);
+            border-color: var(--lime);
+        }
+        .task-cb.checked::after {
+            content: '✓';
+            font-size: 10px;
+            color: var(--ink);
+            font-weight: 800;
+        }
+
+        .task-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .task-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--bright);
+            color: var(--body);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .task-name.done {
+            text-decoration: line-through;
+            color: var(--muted);
+        }
+        .task-meta {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .task-meta-chip {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity .15s;
+        }
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+        .task-act-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: var(--r-sm);
+            border: 1px solid var(--edge);
+            background: var(--raised);
+            color: var(--muted);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .15s;
+            cursor: pointer;
+        }
+        .task-act-btn:hover {
+            background: var(--edge);
+            color: var(--body);
+        }
+        .task-act-btn.del:hover {
+            background: rgba(255, 92, 92, .15);
+            color: var(--fire);
+            border-color: rgba(255, 92, 92, .3);
+        }
+
+        .pri-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .pri-dot.critical {
+            background: var(--fire);
+        }
+        .pri-dot.high {
+            background: var(--ember);
+        }
+        .pri-dot.medium {
+            background: var(--violet);
+        }
+        .pri-dot.low {
+            background: var(--lime);
+        }
+
+        .pri-badge {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: var(--r-full);
+            flex-shrink: 0;
+        }
+        .pri-badge.critical {
+            background: rgba(255, 92, 92, .12);
+            color: var(--fire);
+        }
+        .pri-badge.high {
+            background: rgba(255, 138, 61, .12);
+            color: var(--ember);
+        }
+        .pri-badge.medium {
+            background: rgba(139, 92, 246, .12);
+            color: var(--lavender);
+        }
+        .pri-badge.low {
+            background: rgba(61, 221, 138, .1);
+            color: var(--lime);
+        }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .deadline-card {
+            background: linear-gradient(135deg, rgba(255, 92, 92, .08), rgba(255, 138, 61, .04));
+            border: 1px solid rgba(255, 92, 92, .2);
+            border-radius: var(--r-lg);
+            padding: 14px;
+        }
+        .deadline-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--fire);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dl-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(255, 92, 92, .08);
+        }
+        .dl-item:last-child {
+            border: none;
+            padding-bottom: 0;
+        }
+        .dl-name {
+            font-size: 12px;
+            color: var(--body);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dl-time {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .dl-time.fire {
+            color: var(--fire);
+        }
+        .dl-time.ember {
+            color: var(--ember);
+        }
+        .dl-time.lime {
+            color: var(--lime);
+        }
+        .dl-time.overdue {
+            color: var(--fire);
+            background: rgba(255, 92, 92, .12);
+            padding: 1px 6px;
+            border-radius: var(--r-sm);
+        }
+
+        .ai-insight-card {
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+        }
+        .ai-insight-head {
+            padding: 12px 14px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, .12), rgba(99, 102, 241, .06));
+            border-bottom: 1px solid rgba(139, 92, 246, .15);
+            border-bottom: 1px solid var(--edge);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--lavender);
+        }
+        .ai-tag {
+            background: var(--grad-ai);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: var(--r-full);
+            letter-spacing: .06em;
+        }
+        .ai-insight-body {
+            padding: 12px 14px;
+            font-size: 12px;
+            line-height: 1.65;
+            color: var(--body);
+            min-height: 60px;
+        }
+        .ai-insight-btns {
+            display: flex;
+            gap: 6px;
+            padding: 0 14px 12px;
+        }
+
+        /* ── habits ── */
+        .habit-row {
+            padding: 12px 14px;
+        }
+        .habit-item {
+            margin-bottom: 12px;
+        }
+        .habit-item:last-child {
+            margin-bottom: 0;
+        }
+        .habit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .habit-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--body);
+        }
+        .habit-rate {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--lime);
+        }
+        .habit-dots {
+            display: flex;
+            gap: 3px;
+        }
+        .habit-dot {
+            flex: 1;
+            height: 20px;
+            border-radius: var(--r-sm);
+            background: var(--edge);
+            transition: background .2s;
+            cursor: pointer;
+            position: relative;
+        }
+        .habit-dot.filled {
+            background: var(--lime);
+        }
+        .habit-dot:hover {
+            opacity: .8;
+        }
+        .habit-day {
+            font-size: 8px;
+            color: var(--muted);
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        /* ── analytics ── */
+        .analytics-wrap {
+            padding: 24px;
+        }
+        .analytics-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 800;
+            font-weight: 700;
+            color: var(--bright);
+            margin-bottom: 4px;
+        }
+        .analytics-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .chart-card {
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-lg);
+            padding: 18px;
+        }
+        .chart-card-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--bright);
+            color: var(--dim);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 100px;
+        }
+        .bar-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            height: 100%;
+        }
+        .bar-container {
+            flex: 1;
+            width: 100%;
+            background: var(--edge);
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+        }
+        .bar-fill {
+            width: 100%;
+            border-radius: 4px 4px 0 0;
+            transition: height .6s cubic-bezier(.34, 1.56, .64, 1);
+            position: relative;
+        }
+        .bar-label {
+            font-size: 9px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+        .bar-val {
+            font-size: 10px;
+            color: var(--body);
+            font-weight: 600;
+        }
+
+        .donut-wrap {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .heat-cell {
+            aspect-ratio: 1;
+            border-radius: 3px;
+            background: var(--edge);
+            transition: background .2s;
+            cursor: pointer;
+            position: relative;
+        }
+        .heat-cell:hover::after {
+            content: attr(data-val);
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--raised);
+            border: 1px solid var(--edge);
+            color: var(--body);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .heat-cell.h1 {
+            background: rgba(139, 92, 246, .2);
+        }
+        .heat-cell.h2 {
+            background: rgba(139, 92, 246, .4);
+        }
+        .heat-cell.h3 {
+            background: rgba(139, 92, 246, .6);
+        }
+        .heat-cell.h4 {
+            background: rgba(139, 92, 246, .85);
+        }
+
+        /* ── chat ── */
+        .chat-wrap {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-topbar {
+            padding: 14px 24px;
+            border-bottom: 1px solid var(--edge);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .ai-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--r-md);
+            background: var(--grad-ai);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            box-shadow: var(--shadow-glow);
+            flex-shrink: 0;
+        }
+        .ai-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--bright);
+            color: var(--dim);
+        }
+        .ai-status {
+            font-size: 11px;
+            color: var(--lime);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .ai-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            display: inline-block;
+        }
+
+        .chat-mode-tabs {
+            margin-left: auto;
+            display: flex;
+            gap: 4px;
+        }
+        .mode-tab {
+            padding: 5px 12px;
+            border-radius: var(--r-full);
+            border: 1px solid var(--edge);
+            background: transparent;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .mode-tab.active {
+            background: rgba(139, 92, 246, .15);
+            border-color: rgba(139, 92, 246, .3);
+            color: var(--lavender);
+        }
+
+        .quick-bar {
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--edge);
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+        .qpill {
+            padding: 5px 12px;
+            border-radius: var(--r-full);
+            border: 1px solid var(--edge);
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .qpill:hover {
+            border-color: var(--violet);
+            color: var(--lavender);
+            background: rgba(139, 92, 246, .06);
+        }
+
+        .chat-msgs {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .msg-row {
+            display: flex;
+            gap: 10px;
+            max-width: 76%;
+        }
+        .msg-row.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        .msg-row.ai {
+            align-self: flex-start;
+        }
+        .msg-av {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+        .msg-row.ai .msg-av {
+            background: var(--grad-ai);
+        }
+        .msg-row.user .msg-av {
+            background: var(--raised);
+            border: 1px solid var(--edge);
+        }
+        .msg-bub {
+            padding: 11px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+        .msg-row.ai .msg-bub {
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            color: var(--body);
+            border-top-left-radius: 3px;
+        }
+        .msg-row.user .msg-bub {
+            background: var(--grad-ai);
+            color: white;
+            border-top-right-radius: 3px;
+        }
+        .msg-time {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 4px;
+            padding: 0 2px;
+            align-self: flex-end;
+        }
+
+        .ai-action-card {
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: rgba(139, 92, 246, .08);
+            border: 1px solid rgba(139, 92, 246, .2);
+            border-radius: var(--r-md);
+            font-size: 12px;
+            color: var(--lavender);
+        }
+        .ai-action-card strong {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .typing-wrap {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 11px 14px;
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            border-radius: 12px;
+            border-top-left-radius: 3px;
+            width: fit-content;
+        }
+        .t-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--muted);
+            animation: tdot 1.2s infinite;
+        }
+        .t-dot:nth-child(2) {
+            animation-delay: .2s;
+        }
+        .t-dot:nth-child(3) {
+            animation-delay: .4s;
+        }
+        @keyframes tdot {
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .chat-input-row {
+            padding: 14px 24px;
+            border-top: 1px solid var(--edge);
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+        .input-wrap {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-lg);
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 8px 14px;
+            transition: border-color .2s;
+        }
+        .input-wrap:focus-within {
+            border-color: var(--violet);
+        }
+        .chat-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            color: var(--bright);
+            resize: none;
+            min-height: 20px;
+            max-height: 100px;
+            line-height: 1.5;
+        }
+        .chat-input::placeholder {
+            color: var(--muted);
+        }
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--r-md);
+            background: var(--grad-ai);
+            border: none;
+            color: white;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity .15s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .send-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        /* ── add task ── */
+        .add-wrap {
+            padding: 24px;
+            max-width: 680px;
+        }
+        .form-h {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 800;
+            font-weight: 700;
+            color: var(--bright);
+            margin-bottom: 4px;
+        }
+        .form-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+        .ai-parse-zone {
+            background: linear-gradient(135deg, rgba(139, 92, 246, .08), rgba(99, 102, 241, .04));
+            border: 1px dashed rgba(139, 92, 246, .35);
+            border-radius: var(--r-lg);
+            padding: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .ai-parse-icon {
+            font-size: 24px;
+        }
+        .ai-parse-text h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--lavender);
+        }
+        .ai-parse-text p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .ai-parse-input {
+            flex: 1;
+            background: var(--raised);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-md);
+            padding: 9px 12px;
+            font-size: 13px;
+            color: var(--bright);
+            color: var(--body);
+            outline: none;
+            font-family: var(--font-body);
+            transition: border-color .2s;
+        }
+        .ai-parse-input:focus {
+            border-color: var(--violet);
+        }
+        .ai-parse-input::placeholder {
+            color: var(--muted);
+        }
+        .ai-parse-btn {
+            padding: 9px 16px;
+            background: var(--grad-ai);
+            color: white;
+            border: none;
+            border-radius: var(--r-md);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            font-family: var(--font-body);
+            transition: opacity .15s;
+        }
+        .ai-parse-btn:hover {
+            opacity: .9;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+        .field-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .field-input,
+        .field-select,
+        .field-textarea {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-md);
+            padding: 10px 13px;
+            font-size: 13px;
+            color: var(--bright);
+            color: var(--body);
+            outline: none;
+            font-family: var(--font-body);
+            transition: border-color .2s;
+        }
+        .field-input:focus,
+        .field-select:focus,
+        .field-textarea:focus {
+            border-color: var(--violet);
+        }
+        .field-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B74A8' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+        .field-select option {
+            background: #181C30;
+        }
+        .field-textarea {
+            resize: vertical;
+            min-height: 72px;
+        }
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .pri-sel {
+            display: flex;
+            gap: 6px;
+        }
+        .pri-opt {
+            flex: 1;
+            padding: 8px;
+            border-radius: var(--r-md);
+            border: 1px solid var(--edge);
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .pri-opt:hover {
+            background: var(--raised);
+        }
+        .pri-opt.sel-critical {
+            background: rgba(255, 92, 92, .12);
+            border-color: rgba(255, 92, 92, .4);
+            color: var(--fire);
+        }
+        .pri-opt.sel-high {
+            background: rgba(255, 138, 61, .12);
+            border-color: rgba(255, 138, 61, .4);
+            color: var(--ember);
+        }
+        .pri-opt.sel-medium {
+            background: rgba(139, 92, 246, .12);
+            border-color: rgba(139, 92, 246, .4);
+            color: var(--lavender);
+        }
+        .pri-opt.sel-low {
+            background: rgba(61, 221, 138, .1);
+            border-color: rgba(61, 221, 138, .3);
+            color: var(--lime);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: var(--grad-ai);
+            color: white;
+            border: none;
+            border-radius: var(--r-lg);
+            font-size: 15px;
+            font-weight: 700;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: opacity .15s;
+            box-shadow: var(--shadow-glow);
+            margin-top: 4px;
+        }
+        .submit-btn:hover {
+            opacity: .9;
+        }
+
+        /* ── kanban ── */
+        .kanban-wrap {
+            padding: 24px;
+        }
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        .kanban-col {
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-lg);
+            min-height: 300px;
+            overflow: hidden;
+        }
+        .kanban-col-head {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--edge);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .kanban-col-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--bright);
+            color: var(--dim);
+        }
+        .kanban-count {
+            font-size: 11px;
+            padding: 1px 7px;
+            border-radius: var(--r-full);
+            background: var(--raised);
+            color: var(--muted);
+        }
+        .kanban-body {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 200px;
+        }
+        .kanban-card {
+            background: var(--raised);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-md);
+            padding: 10px 12px;
+            cursor: grab;
+            transition: all .15s;
+            animation: fadeUp .2s ease;
+        }
+        .kanban-card:hover {
+            border-color: var(--subtle);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+        .kanban-card-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--bright);
+            color: var(--body);
+            margin-bottom: 6px;
+        }
+        .kanban-card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* ── focus overlay ── */
+        .focus-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 8, 15, .95);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            backdrop-filter: blur(12px);
+        }
+        .focus-overlay.visible {
+            display: flex;
+        }
+        .focus-mode-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .focus-big-timer {
+            font-family: var(--font-mono);
+            font-size: 80px;
+            font-weight: 600;
+            font-weight: 500;
+            color: var(--bright);
+            letter-spacing: .05em;
+            line-height: 1;
+        }
+        .focus-big-timer.break {
+            color: var(--sky);
+        }
+        .focus-task-name {
+            font-size: 16px;
+            color: var(--muted);
+            max-width: 400px;
+            text-align: center;
+        }
+        .focus-ring-wrap {
+            position: relative;
+            margin: 0 auto;
+        }
+        .focus-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--r-md);
+            border: 1px solid var(--edge);
+            background: var(--raised);
+            color: var(--muted);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .focus-btns-row {
+            display: flex;
+            gap: 12px;
+        }
+        .focus-ov-btn {
+            padding: 12px 28px;
+            border-radius: var(--r-full);
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid var(--edge);
+            background: var(--raised);
+            color: var(--body);
+            cursor: pointer;
+            font-family: var(--font-body);
+            transition: all .15s;
+        }
+        .focus-ov-btn.primary {
+            background: var(--grad-ai);
+            border-color: transparent;
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+        .focus-ov-btn:hover {
+            background: var(--edge);
+        }
+        .focus-ov-btn.primary:hover {
+            opacity: .9;
+        }
+        .focus-pomodoros {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .pom-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid var(--outline);
+            background: transparent;
+        }
+        .pom-dot.done {
+            background: var(--violet);
+            border-color: var(--violet);
+        }
+
+        /* ── settings modal ── */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 8, 15, .75);
+            backdrop-filter: blur(4px);
+            z-index: 80;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-backdrop.open {
+            display: flex;
+        }
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-xl);
+            padding: 24px;
+            width: 480px;
+            max-width: 95vw;
+            box-shadow: var(--shadow-md);
+            animation: modalIn .2s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 17px;
+            font-weight: 800;
+            font-weight: 700;
+            color: var(--bright);
+        }
+        .modal-close {
+            background: var(--raised);
+            border: 1px solid var(--edge);
+            width: 30px;
+            height: 30px;
+            border-radius: var(--r-md);
+            color: var(--muted);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover {
+            border-color: var(--violet);
+            color: var(--bright);
+        }
+
+        .settings-field {
+            margin-bottom: 14px;
+        }
+        .settings-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        .settings-field input {
+            width: 100%;
+            background: var(--raised);
+            border: 1px solid var(--edge);
+            border-radius: var(--r-md);
+            padding: 10px 13px;
+            font-size: 13px;
+            color: var(--bright);
+            color: var(--body);
+            outline: none;
+            transition: border-color .2s;
+        }
+        .settings-field input:focus {
+            border-color: var(--violet);
+        }
+        .settings-field .hint {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        .settings-field .hint a {
+            color: var(--lavender);
+        }
+        .settings-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .settings-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: var(--r-md);
+            border: 1px solid var(--edge);
+            background: var(--surface);
+            color: var(--body);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .settings-actions button:hover {
+            background: var(--raised);
+        }
+        .settings-actions button.primary {
+            background: var(--grad-ai);
+            border-color: transparent;
+            color: white;
+        }
+        .settings-actions button.primary:hover {
+            opacity: .9;
+        }
+        .settings-status {
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: var(--r-md);
+            margin-top: 8px;
+            display: none;
+        }
+        .settings-status.show {
+            display: block;
+        }
+        .settings-status.success {
+            background: rgba(61, 221, 138, .1);
+            border: 1px solid rgba(61, 221, 138, .2);
+            color: var(--lime);
+        }
+        .settings-status.error {
+            background: rgba(255, 92, 92, .1);
+            border: 1px solid rgba(255, 92, 92, .2);
+            color: var(--fire);
+        }
+
+        /* ── toast ── */
+        .toast-stack {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            padding: 11px 16px;
+            border-radius: var(--r-md);
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid;
+            pointer-events: all;
+            transform: translateX(120%);
+            transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-md);
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+        .toast.success {
+            background: rgba(61, 221, 138, .1);
+            border-color: rgba(61, 221, 138, .3);
+            color: var(--lime);
+        }
+        .toast.error {
+            background: rgba(255, 92, 92, .1);
+            border-color: rgba(255, 92, 92, .3);
+            color: var(--fire);
+        }
+        .toast.info {
+            background: rgba(139, 92, 246, .1);
+            border-color: rgba(139, 92, 246, .3);
+            color: var(--lavender);
+        }
+        .toast.warn {
+            background: rgba(245, 200, 66, .1);
+            border-color: rgba(245, 200, 66, .3);
+            color: var(--gold);
+            color: var(--ember);
+        }
+
+        .db-banner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            background: rgba(61, 221, 138, .06);
+            border-bottom: 1px solid rgba(61, 221, 138, .12);
+            font-size: 11px;
+            color: var(--lime);
+            font-weight: 500;
+        }
+        .db-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--lime);
+            animation: pulse 2s infinite;
+        }
+
+        .empty-state {
+            padding: 40px;
+            text-align: center;
+        }
+        .empty-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+        .empty-h {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--body);
+            margin-bottom: 4px;
+        }
+        .empty-p {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .fade-up {
+            animation: fadeUp .3s ease;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── responsive tweaks ── */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .kanban-board {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            .shell {
+                grid-template-columns: 60px 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+            .topbar-title {
+                font-size: 13px;
+            }
+            .search-bar {
+                max-width: 160px;
+            }
+            .dash-greeting {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FOCUS OVERLAY -->
+    <div class="focus-overlay" id="focusOverlay">
+        <button class="focus-close" onclick="closeFocusMode()">✕</button>
+        <div class="focus-mode-label" id="focusModeLabel">Focus Session</div>
+        <div class="focus-big-timer" id="focusBigTimer">25:00</div>
+        <div class="focus-task-name" id="focusTaskName">Select a task to focus on</div>
+        <div class="focus-pomodoros" id="focusPomodoros"></div>
+        <div class="focus-btns-row">
+            <button class="focus-ov-btn primary" id="focusOvBtn" onclick="toggleFocusTimer()">▶ Start</button>
+            <button class="focus-ov-btn" onclick="skipFocusPhase()">⏭ Skip</button>
+            <button class="focus-ov-btn" onclick="resetFocusTimer()">↺ Reset</button>
+        </div>
+    </div>
+
+    <!-- TASK DETAIL MODAL -->
+    <div class="modal-backdrop" id="modalBackdrop" onclick="if(event.target===this) closeModal()">
+        <div class="modal">
+            <div class="modal-head">
+                <div class="modal-title" id="modal-task-name">Task Details</div>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal-backdrop" id="settingsModal" onclick="if(event.target===this) closeSettings()">
+        <div class="modal">
+            <div class="modal-head">
+                <div class="modal-title">⚙️ AI Settings</div>
+                <button class="modal-close" onclick="closeSettings()">✕</button>
+            </div>
+            <div class="settings-field">
+                <label>Anthropic API Key</label>
+                <input type="password" id="apiKeyInput" placeholder="sk-ant-..." autocomplete="off">
+                <div class="hint">Get your key at <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a></div>
+            </div>
+            <div class="settings-field">
+                <label>CORS Proxy URL</label>
+                <input type="text" id="proxyUrlInput" placeholder="https://cors-anywhere.herokuapp.com/">
+                <div class="hint">Leave as default or use your own proxy. The app uses this to route AI requests.</div>
+            </div>
+            <div class="settings-status" id="settingsStatus"></div>
+            <div class="settings-actions">
+                <button onclick="saveSettings()" class="primary">💾 Save & Test</button>
+                <button onclick="closeSettings()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST STACK -->
+    <div class="toast-stack" id="toastStack"></div>
+
+    <!-- APP SHELL -->
+    <div class="shell">
+
+        <!-- RAIL -->
+        <div class="rail">
+            <div class="rail-logo">⚡</div>
+            <button class="rail-btn active" title="Dashboard" onclick="switchView('dashboard', this)">📊</button>
+            <button class="rail-btn" title="AI Assistant" onclick="switchView('chat', this)">🤖</button>
+            <button class="rail-btn" title="Kanban Board" onclick="switchView('kanban', this)">🗂️</button>
+            <button class="rail-btn" title="Analytics" onclick="switchView('analytics', this)">📈</button>
+            <button class="rail-btn" title="Add Task" onclick="switchView('add', this)">
+                <span style="font-size:22px;font-weight:300;">+</span>
+            </button>
+            <div class="rail-divider"></div>
+            <button class="rail-btn" title="Focus Mode" onclick="openFocusMode()">🎯</button>
+            <button class="rail-btn" title="Clear Completed" onclick="clearCompleted()">🗑️</button>
+            <div class="rail-avatar" title="Profile">U</div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="db-banner">
+                <div class="db-dot"></div>
+                Database synced · <span id="db-count">0</span> records
+            </div>
+            <div class="sidebar-head">
+                <h2>Rescue <span style="background:var(--grad-ai);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Hub</span></h2>
+                <p id="sidebar-date">Saturday, June 27</p>
+                <p id="sidebar-date">Saturday, 27 June</p>
+            </div>
+            <div class="streak-widget">
+                <div class="streak-fire">🔥</div>
+                <div>
+                    <div class="streak-val" id="streak-val">0</div>
+                    <div class="streak-label">Day streak</div>
+                </div>
+                <div style="margin-left:auto; text-align:right;">
+                    <div style="font-size:11px;color:var(--muted);">Score</div>
+                    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Score</div>
+                    <div style="font-size:16px;font-weight:800;color:var(--lavender);" id="sidebar-score">--</div>
+                </div>
+            </div>
+            <div class="nav-group">
+                <div class="nav-group-label">Overview</div>
+                <div class="nav-item active" onclick="switchView('dashboard', null, this)"><span class="nav-icon">📊</span>Dashboard</div>
+                <div class="nav-item" onclick="switchView('chat', null, this)"><span class="nav-icon">🤖</span>AI Assistant <span class="nav-badge blue">AI</span></div>
+                <div class="nav-item" onclick="switchView('kanban', null, this)"><span class="nav-icon">🗂️</span>Kanban Board</div>
+                <div class="nav-item" onclick="switchView('analytics', null, this)"><span class="nav-icon">📈</span>Analytics</div>
+            </div>
+            <div class="nav-group">
+                <div class="nav-group-label">Tasks</div>
+                <div class="nav-item" onclick="switchView('add', null, this)"><span class="nav-icon">➕</span>New Task</div>
+                <div class="nav-item" onclick="filterTasks('urgent')"><span class="nav-icon">🔥</span>Urgent <span class="nav-badge red" id="nb-urgent">0</span></div>
+                <div class="nav-item" onclick="filterTasks('today')"><span class="nav-icon">📅</span>Today <span class="nav-badge green" id="nb-today">0</span></div>
+                <div class="nav-item" onclick="filterTasks('all')"><span class="nav-icon">📋</span>All Tasks <span class="nav-badge gray" id="nb-all">0</span></div>
+                <div class="nav-item" onclick="filterTasks('done')"><span class="nav-icon">✅</span>Completed</div>
+            </div>
+            <div class="nav-group">
+                <div class="nav-group-label">Categories</div>
+                <div class="nav-item" onclick="filterTasks('Academic')"><span class="nav-icon">🎓</span>Academic</div>
+                <div class="nav-item" onclick="filterTasks('Work')"><span class="nav-icon">💼</span>Work</div>
+                <div class="nav-item" onclick="filterTasks('Finance')"><span class="nav-icon">💰</span>Finance</div>
+                <div class="nav-item" onclick="filterTasks('Health')"><span class="nav-icon">🏃</span>Health</div>
+                <div class="nav-item" onclick="filterTasks('Personal')"><span class="nav-icon">🌟</span>Personal</div>
+            </div>
+            <div style="margin-top:auto; padding-bottom:12px;">
+                <div style="padding: 0 10px; margin-bottom:4px;" class="nav-group-label">Pomodoro Timer</div>
+                <div class="focus-widget">
+                    <div class="focus-timer-display" id="sidebar-timer">25:00</div>
+                    <div class="focus-progress">
+                        <div class="focus-progress-fill" id="sidebar-progress" style="width:0%"></div>
+                    </div>
+                    <div class="focus-btns" style="margin-top:8px;">
+                        <button class="focus-btn primary" onclick="toggleFocusTimer()">▶ Focus</button>
+                        <button class="focus-btn" onclick="openFocusMode()">⤢ Expand</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main">
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div class="topbar-title" id="topbar-title">Dashboard</div>
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="search-input" placeholder="Search tasks, notes, habits…" oninput="handleSearch(this.value)">
+                </div>
+                <div class="topbar-right">
+                    <div class="topbar-pill urgent" id="urgentPill">
+                        <div class="pulse-dot"></div>
+                        <span id="urgentCount">0 urgent</span>
+                    </div>
+                    <button class="icon-btn settings-btn" title="AI Settings" onclick="openSettings()">⚙️</button>
+                    <button class="icon-btn" title="Focus Mode" onclick="openFocusMode()">🎯</button>
+                    <button class="icon-btn" title="Export Data" onclick="exportData()">⬇️</button>
+                    <button class="icon-btn" title="Clear All Data" onclick="clearAllData()">⚠️</button>
+                </div>
+            </div>
+
+            <!-- PANEL WRAP -->
+            <div class="panel-wrap">
+
+                <!-- DASHBOARD -->
+                <div class="panel active" id="panel-dashboard">
+                    <div class="dash-wrap">
+                        <div class="dash-hero">
+                            <div>
+                                <div class="dash-greeting">Good <em id="time-greet">morning</em>, ready to <em>crush it?</em></div>
+                                <div class="dash-date" id="dash-date"></div>
+                            </div>
+                            <div class="score-ring-wrap">
+                                <svg width="80" height="80" viewBox="0 0 80 80">
+                                    <circle cx="40" cy="40" r="34" fill="none" stroke="#232845" stroke-width="6"/>
+                                    <circle cx="40" cy="40" r="34" fill="none" stroke="url(#scoreGrad)" stroke-width="6"
+                                    stroke-linecap="round" stroke-dasharray="213.6" id="scoreArc" stroke-dashoffset="213.6"/>
+                                    <defs>
+                                        <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#8B5CF6"/>
+                                            <stop offset="100%" stop-color="#38C4F0"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div class="score-val">
+                                    <div class="score-num" id="score-num">--</div>
+                                    <div class="score-label">Score</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stats-row">
+                            <div class="stat-card" style="--card-accent:var(--fire)">
+                                <div class="stat-emoji">🔥</div>
+                                <div class="stat-val" id="s-overdue" style="color:var(--fire)">0</div>
+                                <div class="stat-label">Overdue</div>
+                                <div class="stat-delta down" id="s-overdue-d">Review now</div>
+                            </div>
+                            <div class="stat-card" style="--card-accent:var(--gold)">
+                                <div class="stat-emoji">📅</div>
+                                <div class="stat-val" id="s-today" style="color:var(--gold)">0</div>
+                                <div class="stat-label">Due Today</div>
+                                <div class="stat-delta warn" id="s-today-d">Keep pushing</div>
+                            </div>
+                            <div class="stat-card" style="--card-accent:var(--lime)">
+                                <div class="stat-emoji">✅</div>
+                                <div class="stat-val" id="s-done" style="color:var(--lime)">0</div>
+                                <div class="stat-label">Completed</div>
+                                <div class="stat-delta up" id="s-done-d">Great work!</div>
+                            </div>
+                            <div class="stat-card" style="--card-accent:var(--violet)">
+                                <div class="stat-emoji">🎯</div>
+                                <div class="stat-val" id="s-streak" style="color:var(--lavender)">0<span> days</span></div>
+                                <div class="stat-label">Streak</div>
+                                <div class="stat-delta up">Keep it alive</div>
+                            </div>
+                        </div>
+
+                        <div class="content-grid">
+                            <div class="card fade-up">
+                                <div class="card-head">
+                                    <span class="card-title">📋 Task List</span>
+                                    <button class="card-btn" onclick="switchView('add')">+ New</button>
+                                </div>
+                                <div class="task-filters">
+                                    <button class="filter-pill active" onclick="setFilter('all',this)">All</button>
+                                    <button class="filter-pill" onclick="setFilter('urgent',this)">🔥 Urgent</button>
+                                    <button class="filter-pill" onclick="setFilter('today',this)">📅 Today</button>
+                                    <button class="filter-pill" onclick="setFilter('done',this)">✅ Done</button>
+                                </div>
+                                <div id="task-list"></div>
+                            </div>
+
+                            <div class="right-col">
+                                <div class="deadline-card">
+                                    <div class="deadline-title">⏰ <span>Countdown</span></div>
+                                    <div id="deadline-list"></div>
+                                </div>
+
+                                <div class="ai-insight-card">
+                                    <div class="ai-insight-head">
+                                        🧠 AI Insight <span class="ai-tag">LIVE</span>
+                                        <span style="margin-left:auto;font-size:10px;font-weight:400;color:var(--muted);" id="insightStatus">● ready</span>
+                                    </div>
+                                    <div class="ai-insight-body" id="ai-insight-body">Analyzing your patterns…</div>
+                                    <div class="ai-insight-btns">
+                                        <button class="focus-btn primary" onclick="switchView('chat')">Ask AI</button>
+                                        <button class="focus-btn" onclick="refreshInsight()">↺ Refresh</button>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-head">
+                                        <span class="card-title">📈 Habits</span>
+                                        <span class="card-tag">7-day</span>
+                                    </div>
+                                    <div class="habit-row" id="habit-row"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHAT -->
+                <div class="panel chat-layout" id="panel-chat">
+                    <div class="chat-topbar">
+                        <div class="ai-avatar">🤖</div>
+                        <div>
+                            <div class="ai-name">LifeSaver AI</div>
+                            <div class="ai-status" id="chatStatus">Online</div>
+                        </div>
+                        <div class="chat-mode-tabs">
+                            <button class="mode-tab active" onclick="setChatMode('assistant',this)">💬 Chat</button>
+                            <button class="mode-tab" onclick="setChatMode('plan',this)">📅 Plan</button>
+                            <button class="mode-tab" onclick="setChatMode('coach',this)">🏆 Coach</button>
+                        </div>
+                    </div>
+                    <div class="quick-bar">
+                        <button class="qpill" onclick="usePill(this)">What should I do first?</button>
+                        <button class="qpill" onclick="usePill(this)">Help me beat procrastination</button>
+                        <button class="qpill" onclick="usePill(this)">Build my schedule for today</button>
+                        <button class="qpill" onclick="usePill(this)">Prioritize my tasks</button>
+                        <button class="qpill" onclick="usePill(this)">I'm overwhelmed, help me</button>
+                        <button class="qpill" onclick="usePill(this)">Weekly review</button>
+                    </div>
+                    <div class="chat-msgs" id="chat-msgs">
+                        <div class="msg-row ai fade-up">
+                            <div class="msg-av">🤖</div>
+                            <div>
+                                <div class="msg-bub">Hey! I'm your LifeSaver AI — I have full context of your tasks, habits, and productivity patterns. I can build you a daily plan, help you beat procrastination, or just keep you focused. What's on your mind? 🎯</div>
+                                <div class="msg-time">Now</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-row">
+                        <div class="input-wrap">
+                            <textarea class="chat-input" id="chat-input" placeholder="Ask anything about your tasks, schedule, or productivity…" rows="1"
+                            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"
+                            oninput="autoGrow(this)"></textarea>
+                        </div>
+                        <button class="send-btn" id="send-btn" onclick="sendMsg()">➤</button>
+                    </div>
+                </div>
+
+                <!-- KANBAN -->
+                <div class="panel" id="panel-kanban">
+                    <div class="kanban-wrap">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+                            <div>
+                                <div style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--bright);">Kanban Board</div>
+                                <div style="font-size:13px;color:var(--muted);margin-top:2px;">Drag tasks between stages to update their status</div>
+                            </div>
+                            <button onclick="switchView('add')" style="padding:9px 18px;background:var(--grad-ai);color:white;border:none;border-radius:var(--r-md);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-body);">+ Add Task</button>
+                        </div>
+                        <div class="kanban-board" id="kanban-board"></div>
+                    </div>
+                </div>
+
+                <!-- ANALYTICS -->
+                <div class="panel" id="panel-analytics">
+                    <div class="analytics-wrap">
+                        <div class="analytics-title">Analytics & Insights</div>
+                        <div class="analytics-sub">Your productivity data at a glance</div>
+                        <div class="analytics-grid">
+                            <div class="chart-card">
+                                <div class="chart-card-title">📊 Tasks Completed — Last 7 Days</div>
+                                <div class="bar-chart" id="bar-chart"></div>
+                            </div>
+                            <div class="chart-card">
+                                <div class="chart-card-title">🥧 Tasks by Category</div>
+                                <div class="donut-wrap">
+                                    <svg width="100" height="100" viewBox="0 0 100 100" id="donut-svg"></svg>
+                                    <div class="donut-legend" id="donut-legend"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-card" style="margin-bottom:16px;">
+                            <div class="chart-card-title">🗓️ Productivity Heatmap — Last 4 Weeks</div>
+                            <div style="display:flex;gap:24px;align-items:flex-start;">
+                                <div class="heatmap" id="heatmap" style="flex:1;"></div>
+                                <div style="font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:6px;">
+                                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:3px;background:var(--edge);"></div>None</div>
+                                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:3px;" class="heat-cell h1"></div>Low</div>
+                                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:3px;" class="heat-cell h3"></div>High</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-card-title">⚡ Priority Breakdown</div>
+                            <div id="priority-breakdown" style="display:flex;flex-direction:column;gap:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADD TASK -->
+                <div class="panel" id="panel-add">
+                    <div class="add-wrap">
+                        <div class="form-h">New Task</div>
+                        <div class="form-sub">Type naturally or fill in the details below.</div>
+                        <div class="ai-parse-zone">
+                            <div class="ai-parse-icon">🪄</div>
+                            <div class="ai-parse-text">
+                                <h3>Natural Language Input</h3>
+                                <p>Type like: "Submit report by Friday, high priority, 2 hours"</p>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:8px;margin-bottom:20px;">
+                            <input class="ai-parse-input" id="nl-input" placeholder="e.g. Study for exam on Tuesday evening, very important…">
+                            <button class="ai-parse-btn" onclick="parseNaturalLanguage()">✨ Parse</button>
+                        </div>
+                        <div class="field">
+                            <div class="field-label">Task Name *</div>
+                            <input class="field-input" id="f-name" placeholder="What needs to be done?">
+                        </div>
+                        <div class="field">
+                            <div class="field-label">Description</div>
+                            <textarea class="field-textarea" id="f-desc" placeholder="Context, steps, or notes…"></textarea>
+                        </div>
+                        <div class="field">
+                            <div class="field-label">Priority</div>
+                            <div class="pri-sel">
+                                <button class="pri-opt" data-pri="critical" onclick="selectPriority(this)">🔴 Critical</button>
+                                <button class="pri-opt" data-pri="high" onclick="selectPriority(this)">🟠 High</button>
+                                <button class="pri-opt sel-medium" data-pri="medium" onclick="selectPriority(this)">🟡 Medium</button>
+                                <button class="pri-opt" data-pri="low" onclick="selectPriority(this)">🟢 Low</button>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field">
+                                <div class="field-label">Deadline</div>
+                                <input type="datetime-local" class="field-input" id="f-deadline">
+                            </div>
+                            <div class="field">
+                                <div class="field-label">Estimated Time</div>
+                                <select class="field-select" id="f-time">
+                                    <option value="15">15 minutes</option>
+                                    <option value="30">30 minutes</option>
+                                    <option value="60" selected>1 hour</option>
+                                    <option value="120">2 hours</option>
+                                    <option value="240">4 hours</option>
+                                    <option value="480">Full day</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field">
+                                <div class="field-label">Category</div>
+                                <select class="field-select" id="f-cat">
+                                    <option>Academic</option>
+                                    <option>Work</option>
+                                    <option>Finance</option>
+                                    <option>Health</option>
+                                    <option>Personal</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <div class="field-label">Status</div>
+                                <select class="field-select" id="f-status">
+                                    <option value="todo">To Do</option>
+                                    <option value="inprogress">In Progress</option>
+                                    <option value="review">In Review</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="submit-btn" onclick="saveTask()">💾 Save Task</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ══════════════════════════════════════════
+           DATABASE — localStorage
+        ═══════════════════════════════════════════ */
+        const DB = {
+            KEY_TASKS: 'ls_tasks_v3',
+            KEY_HABITS: 'ls_habits_v3',
+            KEY_STREAK: 'ls_streak_v3',
+            KEY_HIST: 'ls_chat_v3',
+            KEY_STATS: 'ls_stats_v3',
+            KEY_SETTINGS: 'ls_settings_v3',
+
+            load(key, def = []) {
+                try { return JSON.parse(localStorage.getItem(key)) ?? def; } catch { return def; }
+            },
+            save(key, val) {
+                try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+            },
+            count() {
+                return [DB.KEY_TASKS, DB.KEY_HABITS, DB.KEY_STREAK, DB.KEY_HIST, DB.KEY_STATS]
+                    .reduce((n, k) => { const v = localStorage.getItem(k); return n + (v ? JSON.parse(v).length || 1 :
+                        0); }, 0);
+            }
+        };
+
+        /* ── settings ── */
+        let settings = DB.load(DB.KEY_SETTINGS, {
+            apiKey: '',
+            proxyUrl: 'https://cors-anywhere.herokuapp.com/'
+        });
+
+        function saveSettingsToDB() {
+            DB.save(DB.KEY_SETTINGS, settings);
+        }
+
+        /* ══════════════════════════════════════════
+           STATE
+        ═══════════════════════════════════════════ */
+        let tasks = DB.load(DB.KEY_TASKS, getSeedTasks());
+        let habits = DB.load(DB.KEY_HABITS, getSeedHabits());
+        let streak = DB.load(DB.KEY_STREAK, { val: 7, lastDate: new Date().toDateString() });
+        let chatHistory = DB.load(DB.KEY_HIST, []);
+        let weekStats = DB.load(DB.KEY_STATS, getDefaultWeekStats());
+
+        let currentFilter = 'all';
+        let selectedPriority = 'medium';
+        let chatMode = 'assistant';
+        let focusRunning = false;
+        let focusSeconds = 25 * 60;
+        let focusTotal = 25 * 60;
+        let focusBreak = false;
+        let focusPomodoros = 0;
+        let focusInterval = null;
+        let focusTaskName = '';
+        let activeNavEl = null;
+
+        function getSeedTasks() {
+            const now = Date.now();
+            return [
+                { id: uid(), name: 'Submit assignment draft', desc: 'Final submission for CS301 module', priority: 'critical',
+                    cat: 'Academic', deadline: now + 3 * 3600000, est: 60, status: 'inprogress', done: false,
+                    created: now },
+                { id: uid(), name: 'Pay electricity bill', desc: 'Online payment via HDFC', priority: 'critical',
+                    cat: 'Finance', deadline: now - 86400000, est: 15, status: 'todo', done: false,
+                created: now - 90000000 },
+                { id: uid(), name: 'Prepare team meeting notes', desc: 'Agenda, outcomes & action items', priority: 'high',
+                    cat: 'Work', deadline: now + 26 * 3600000, est: 60, status: 'todo', done: false,
+                created: now - 50000 },
+                { id: uid(), name: 'Complete online course Module 4', desc: 'React hooks and state management',
+                    priority: 'medium', cat: 'Academic', deadline: now + 3 * 86400000, est: 120, status: 'todo',
+                    done: false, created: now - 200000 },
+                { id: uid(), name: 'Schedule dentist appointment', desc: 'Call Dr. Sharma clinic', priority: 'low',
+                    cat: 'Health', deadline: now + 7 * 86400000, est: 15, status: 'todo', done: false,
+                created: now - 500000 },
+                { id: uid(), name: 'Read research paper on LLMs', desc: 'Attention is All You Need — full read',
+                    priority: 'medium', cat: 'Academic', deadline: now - 3600000, est: 60, status: 'review', done: true,
+                    created: now - 86400000 },
+            ];
+        }
+
+        function getSeedHabits() {
+            return [
+                { id: uid(), name: 'Study', days: [1, 1, 1, 0, 1, 1, 1], color: '#8B5CF6' },
+                { id: uid(), name: 'Exercise', days: [1, 0, 1, 1, 0, 1, 0], color: '#3DDD8A' },
+                { id: uid(), name: 'Reading', days: [1, 1, 0, 1, 1, 1, 1], color: '#38C4F0' },
+                { id: uid(), name: 'Meditation', days: [0, 1, 1, 0, 1, 0, 1], color: '#F5C842' },
+            ];
+        }
+
+        function getDefaultWeekStats() {
+            return [2, 4, 1, 6, 3, 5, 4];
+        }
+
+        function uid() { return Math.random().toString(36).slice(2, 10); }
+
+        /* ══════════════════════════════════════════
+           INIT
+        ═══════════════════════════════════════════ */
+        function init() {
+            setDateTime();
+            setInterval(setDateTime, 30000);
+            updateAllUI();
+            setInterval(updateCountdowns, 1000);
+            setTimeout(() => refreshInsight(), 400);
+            updateDbBanner();
+            renderKanban();
+            renderAnalytics();
+            // Check for API key and show status
+            updateApiStatus();
+            const urgent = tasks.filter(t => !t.done && (isOverdue(t) || isToday(t)));
+            if (urgent.length) toast(`${urgent.length} task(s) need attention today`, 'warn');
+        }
+
+        function setDateTime() {
+            const now = new Date();
+            const h = now.getHours();
+            const g = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+            const el = document.getElementById('time-greet');
+            if (el) el.textContent = g;
+            const d = now.toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            if (el) el.textContent = g; 
+            const D = now.toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            setEl('dash-date', D);
+            setEl('sidebar-date', now.toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' }));
+        }
+
+        function updateAllUI() {
+            renderTasks();
+            renderHabits();
+            updateStats();
+            updateBadges();
+            updateScoreRing();
+            updateSidebarScore();
+            setEl('streak-val', streak.val);
+            setEl('s-streak', streak.val);
+        }
+
+        function setEl(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = val;
+        }
+
+        function persist() {
+            DB.save(DB.KEY_TASKS, tasks);
+            DB.save(DB.KEY_HABITS, habits);
+            DB.save(DB.KEY_STREAK, streak);
+            DB.save(DB.KEY_STATS, weekStats);
+            updateDbBanner();
+        }
+
+        function updateDbBanner() {
+            const total = tasks.length + habits.reduce((n, h) => n + h.days.filter(Boolean).length, 0);
+            setEl('db-count', total);
+        }
+
+        /* ══════════════════════════════════════════
+           API STATUS
+        ═══════════════════════════════════════════ */
+        function updateApiStatus() {
+            const hasKey = settings.apiKey && settings.apiKey.length > 10;
+            const status = document.getElementById('chatStatus');
+            if (status) {
+                status.textContent = hasKey ? '● API connected' : '● offline (mock mode)';
+                status.style.color = hasKey ? 'var(--lime)' : 'var(--gold)';
+            }
+            const insightStatus = document.getElementById('insightStatus');
+            if (insightStatus) {
+                insightStatus.textContent = hasKey ? '● API ready' : '● mock mode';
+                insightStatus.style.color = hasKey ? 'var(--lime)' : 'var(--gold)';
+            }
+        }
+
+        /* ══════════════════════════════════════════
+           SETTINGS
+        ═══════════════════════════════════════════ */
+        function openSettings() {
+            document.getElementById('apiKeyInput').value = settings.apiKey || '';
+            document.getElementById('proxyUrlInput').value = settings.proxyUrl || 'https://cors-anywhere.herokuapp.com/';
+            document.getElementById('settingsStatus').className = 'settings-status';
+            document.getElementById('settingsStatus').textContent = '';
+            document.getElementById('settingsModal').classList.add('open');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('open');
+        }
+
+        function saveSettings() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            const proxy = document.getElementById('proxyUrlInput').value.trim() || 'https://cors-anywhere.herokuapp.com/';
+            settings.apiKey = key;
+            settings.proxyUrl = proxy;
+            saveSettingsToDB();
+            updateApiStatus();
+            const statusEl = document.getElementById('settingsStatus');
+            if (key && key.length > 10) {
+                statusEl.className = 'settings-status show success';
+                statusEl.textContent = '✅ API key saved! AI features will now use the Anthropic API.';
+                toast('Settings saved! AI is now connected.', 'success');
+            } else {
+                statusEl.className = 'settings-status show error';
+                statusEl.textContent = '⚠️ No valid API key found. AI will use mock responses.';
+                toast('No API key — AI will run in mock mode.', 'warn');
+            }
+            setTimeout(() => { statusEl.className = 'settings-status'; }, 5000);
+        }
+
+        /* ── AI request helper ── */
+        async function callAnthropicAI(messages, systemPrompt, maxTokens = 800) {
+            const hasKey = settings.apiKey && settings.apiKey.length > 10;
+            if (!hasKey) {
+                throw new Error('No API key configured. AI is in mock mode.');
+            }
+
+            const proxyUrl = settings.proxyUrl.replace(/\/+$/, '');
+            const targetUrl = 'https://api.anthropic.com/v1/messages';
+
+            const payload = {
+                model: 'claude-3-sonnet-20240229',
+                max_tokens: maxTokens,
+                messages: messages,
+                system: systemPrompt || '',
+            };
+
+            const response = await fetch(`${proxyUrl}/${targetUrl}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': settings.apiKey,
+                    'anthropic-version': '2023-06-01',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errMsg = `API error: ${response.status}`;
+                try {
+                    const errJson = JSON.parse(errorText);
+                    errMsg = errJson.error?.message || errMsg;
+                } catch (e) {}
+                throw new Error(errMsg);
+            }
+
+            const data = await response.json();
+            return data.content?.map(b => b.text || '').join('') || '';
+        }
+
+        /* ── Mock AI responses ── */
+        function getMockInsight() {
+            const insights = [
+                "You have overdue tasks. Your historical data shows you work best between 9–11 AM. Block that time for your most critical item.",
+                "Your habit completion rate is strong this week. Consistent reading is your strongest habit. Consider linking your study sessions to it.",
+                "Based on your task patterns, grouping similar tasks saves mental load. Try batching related items together.",
+                "You're building momentum! Keep your streak alive by tackling one small task right now.",
+                "Your priority mix is balanced. Focus on your critical tasks first thing in the morning.",
+            ];
+            return insights[Math.floor(Math.random() * insights.length)];
+        }
+
+        function getMockChatReply(userMsg, mode) {
+            const replies = {
+                assistant: [
+                    "That's a great question! Based on your task list, I'd suggest starting with your highest-priority item. You have a good mix of tasks — I'd focus on the critical ones first.",
+                    "Looking at your tasks, I notice you have some overdue items. Would you like help breaking them down into smaller steps?",
+                    "Your task list is manageable today. I'd recommend blocking 2 hours for your most important task this morning.",
+                    "Great question! I see you've been consistent with your habits. Keep that momentum going!",
+                    "Based on your patterns, you work best in focused bursts. Try the Pomodoro technique on your next task.",
+                ],
+                plan: [
+                    "Here's a plan for today: 1) Start with your critical task (9-10:30 AM), 2) Work on your medium-priority items (11 AM-12:30 PM), 3) Review and plan tomorrow (4-5 PM).",
+                    "I've built a schedule: Morning block for deep work on your most important task, afternoon for meetings and admin, evening for quick wins.",
+                    "Your optimal day: 9-11 AM deep focus on your top priority, 11-12 PM quick tasks, 1-3 PM collaborative work, 3-4 PM review.",
+                    "Plan your week: dedicate Monday/Tuesday to critical tasks, Wednesday to reviews, Thursday/Friday to creative work.",
+                ],
+                coach: [
+                    "You've got this! Remember: 'The secret of getting ahead is getting started.' Start with your smallest task and build momentum. 💪",
+                    "I believe in you! Your streak shows you're capable. Let's turn that potential into action — what's the ONE thing you'll do today?",
+                    "Champion mindset: Break your big goal into daily actions. Consistency beats intensity. Keep showing up! 🏆",
+                    "You're stronger than your excuses. Your past wins prove it. What's the next move? Make it count! 🔥",
+                    "Progress, not perfection. You've completed tasks before — use that confidence to tackle the next one. You've got this!",
+                ]
+            };
+            const list = replies[mode] || replies.assistant;
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
+        /* ══════════════════════════════════════════
+           TASKS (same as before)
+        ═══════════════════════════════════════════ */
+        function isOverdue(t) { return !t.done && t.deadline && Date.now() > t.deadline; }
+
+        function isToday(t) { if (!t.deadline) return false; const d = new Date(t.deadline),
+                n = new Date(); return d.toDateString() === n.toDateString(); }
+
+        function isUrgent(t) { return !t.done && (isOverdue(t) || (t.priority === 'critical')); }
+
+        function getFilteredTasks() {
+            let list = [...tasks];
+            const q = document.getElementById('search-input')?.value?.toLowerCase();
+            if (q) list = list.filter(t => t.name.toLowerCase().includes(q) || t.cat.toLowerCase().includes(q));
+            switch (currentFilter) {
+                case 'urgent':
+                    return list.filter(isUrgent);
+                case 'today':
+                    return list.filter(t => !t.done && isToday(t));
+                case 'done':
+                    return list.filter(t => t.done);
+                case 'all':
+                    return list;
+                default:
+                    return list.filter(t => t.cat === currentFilter || t.priority === currentFilter);
+            }
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('task-list');
+            if (!container) return;
+            const list = getFilteredTasks();
+            if (!list.length) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="empty-icon">🎉</div><div class="empty-h">All clear!</div><div class="empty-p">No tasks match this filter.</div></div>`;
+                return;
+            }
+            list.sort((a, b) => {
+                if (a.done !== b.done) return a.done ? 1 : -1;
+                if (isOverdue(a) !== isOverdue(b)) return isOverdue(a) ? -1 : 1;
+                const po = { critical: 0, high: 1, medium: 2, low: 3 };
+                return (po[a.priority] || 2) - (po[b.priority] || 2);
+            });
+            container.innerHTML = list.map(t => {
+                const over = isOverdue(t);
+                const deadlineStr = t.deadline ? formatDeadline(t.deadline) : '';
+                return `
+            <div class="task-item${over?' overdue':''}${t.done?' done':''}" onclick="openTaskModal('${t.id}')">
+              <div class="task-cb${t.done?' checked':''}" onclick="event.stopPropagation();toggleDone('${t.id}')"></div>
+              <div class="task-body">
+                <div class="task-name${t.done?' done':''}">${esc(t.name)}</div>
+                <div class="task-meta">
+                  <span class="task-meta-chip">📁 ${t.cat}</span>
+                  ${deadlineStr?`<span class="task-meta-chip" style="color:${over?'var(--fire)':''}">${over?'⚠ ':''}${deadlineStr}</span>`:''}
+                  <span class="task-meta-chip">⏱ ${fmtMin(t.est)}</span>
+                </div>
+              </div>
+              <div class="task-actions">
+                <button class="task-act-btn" onclick="event.stopPropagation();startFocusOnTask('${t.id}')" title="Focus">🎯</button>
+                <button class="task-act-btn del" onclick="event.stopPropagation();deleteTask('${t.id}')" title="Delete">🗑</button>
+              </div>
+              <div class="pri-badge ${t.priority}">${t.priority}</div>
+            </div>`;
+            }).join('');
+        }
+
+        function esc(s) { const d = document.createElement('div');
+            d.textContent = s; return d.innerHTML; }
+
+        function fmtMin(m) { return m >= 60 ? `${m/60}h` : `${m}m`; }
+
+        function formatDeadline(ts) {
+            const diff = ts - Date.now();
+            if (diff < 0) return 'Overdue';
+            const h = Math.floor(diff / 3600000);
+            const d = Math.floor(h / 24);
+            if (d > 1) return `${d}d left`;
+            if (h > 0) return `${h}h left`;
+            return `${Math.floor(diff/60000)}m left`;
+        }
+
+        function updateStats() {
+            const over = tasks.filter(isOverdue).length;
+            const today = tasks.filter(t => !t.done && isToday(t)).length;
+            const done = tasks.filter(t => t.done).length;
+            setEl('s-overdue', over);
+            setEl('s-today', today);
+            setEl('s-done', done);
+            setEl('s-streak', streak.val);
+            setEl('urgentCount', `${tasks.filter(isUrgent).length} urgent`);
+        }
+
+        function updateBadges() {
+            setEl('nb-urgent', tasks.filter(isUrgent).length);
+            setEl('nb-today', tasks.filter(t => !t.done && isToday(t)).length);
+            setEl('nb-all', tasks.length);
+        }
+
+        function updateScoreRing() {
+            const done = tasks.filter(t => t.done).length;
+            const total = tasks.length || 1;
+            const habitScore = habits.reduce((n, h) => n + h.days.filter(Boolean).length, 0) / (habits.length * 7 || 1);
+            const score = Math.round((done / total) * 50 + habitScore * 30 + Math.min(streak.val, 20));
+            setEl('score-num', score);
+            const arc = document.getElementById('scoreArc');
+            if (arc) { const offset = 213.6 * (1 - score / 100);
+                arc.style.strokeDashoffset = offset; }
+        }
+
+        function updateSidebarScore() {
+            const done = tasks.filter(t => t.done).length,
+                total = tasks.length || 1;
+            const habitScore = habits.reduce((n, h) => n + h.days.filter(Boolean).length, 0) / (habits.length * 7 || 1);
+            const s = Math.round((done / total) * 50 + habitScore * 30 + Math.min(streak.val, 20));
+            setEl('sidebar-score', s);
+        }
+
+        function toggleDone(id) {
+            const t = tasks.find(x => x.id === id);
+            if (!t) return;
+            t.done = !t.done;
+            if (t.done) {
+                t.status = 'done';
+                weekStats[6]++;
+                DB.save(DB.KEY_STATS, weekStats);
+                streak.val++;
+                streak.lastDate = new Date().toDateString();
+                toast('✅ Task completed! Streak +1 🔥', 'success');
+            } else {
+                t.status = 'todo';
+                toast('Task reopened', 'info');
+            }
+            persist();
+            updateAllUI();
+            renderKanban();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(x => x.id !== id);
+            persist();
+            updateAllUI();
+            renderKanban();
+            toast('Task deleted', 'info');
+        }
+
+        function clearCompleted() {
+            if (!confirm('Remove all completed tasks?')) return;
+            tasks = tasks.filter(t => !t.done);
+            persist();
+            updateAllUI();
+            renderKanban();
+            toast('Cleared completed tasks', 'info');
+        }
+
+        function clearAllData() {
+            if (!confirm('⚠ This will delete ALL your tasks, habits, and data. Are you sure?')) return;
+            [DB.KEY_TASKS, DB.KEY_HABITS, DB.KEY_STREAK, DB.KEY_HIST, DB.KEY_STATS].forEach(k => localStorage.removeItem(k));
+            tasks = getSeedTasks();
+            habits = getSeedHabits();
+            streak = { val: 7, lastDate: new Date().toDateString() };
+            chatHistory = [];
+            weekStats = getDefaultWeekStats();
+            persist();
+            updateAllUI();
+            renderKanban();
+            renderAnalytics();
+            toast('All data reset to defaults', 'warn');
+        }
+
+        /* ── modal ── */
+        function openTaskModal(id) {
+            const t = tasks.find(x => x.id === id);
+            if (!t) return;
+            setEl('modal-task-name', t.name);
+            const over = isOverdue(t);
+            document.getElementById('modal-body').innerHTML = `
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <span class="pri-badge ${t.priority}">${t.priority}</span>
+                <span style="background:var(--raised);border:1px solid var(--edge);font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--r-full);color:var(--muted);">${t.cat}</span>
+                ${over?`<span style="background:rgba(255,92,92,.1);border:1px solid rgba(255,92,92,.3);font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--r-full);color:var(--fire);">OVERDUE</span>`:''}
+                <span style="background:var(--raised);border:1px solid var(--edge);font-size:10px;font-weight:600;padding:2px 8px;border-radius:var(--r-full);color:var(--muted);">${t.cat}</span>
+                ${over?`<span style="background:rgba(255,92,92,.1);border:1px solid rgba(255,92,92,.3);font-size:10px;font-weight:600;padding:2px 8px;border-radius:var(--r-full);color:var(--fire);">OVERDUE</span>`:''}
+              </div>
+              ${t.desc?`<div style="font-size:13px;color:var(--body);line-height:1.6;">${esc(t.desc)}</div>`:''}
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--raised);border:1px solid var(--edge);border-radius:var(--r-md);padding:12px;">
+                <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Deadline</div><div style="font-size:13px;color:var(--bright);font-weight:600;">${t.deadline?new Date(t.deadline).toLocaleString('en-IN'):'—'}</div></div>
+                <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Est. Time</div><div style="font-size:13px;color:var(--bright);font-weight:600;">${fmtMin(t.est)}</div></div>
+                <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Status</div><div style="font-size:13px;color:var(--bright);font-weight:600;">${t.status}</div></div>
+                <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Done</div><div style="font-size:13px;font-weight:600;color:${t.done?'var(--lime)':'var(--muted)'};">${t.done?'Yes':'No'}</div></div>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="toggleDone('${id}');closeModal();" class="focus-btn primary" style="flex:1;padding:10px;font-size:13px;">${t.done?'↺ Reopen':'✅ Mark Done'}</button>
+                <button onclick="startFocusOnTask('${id}');closeModal();" class="focus-btn" style="flex:1;padding:10px;font-size:13px;">🎯 Focus</button>
+                <button onclick="deleteTask('${id}');closeModal();" class="focus-btn" style="padding:10px;font-size:13px;color:var(--fire);">🗑</button>
+              </div>
+            </div>`;
+            document.getElementById('modalBackdrop').classList.add('open');
+        }
+
+        function closeModal() { document.getElementById('modalBackdrop').classList.remove('open'); }
+
+        /* ── deadlines ── */
+        function updateCountdowns() {
+            const list = tasks.filter(t => !t.done && t.deadline).sort((a, b) => a.deadline - b.deadline).slice(0, 4);
+            const cont = document.getElementById('deadline-list');
+            if (!cont) return;
+            if (!list.length) { cont.innerHTML =
+                '<div style="font-size:12px;color:var(--muted);padding:6px 0;">No upcoming deadlines</div>'; return; }
+            cont.innerHTML = list.map(t => {
+                const diff = t.deadline - Date.now();
+                const over = diff < 0;
+                const h = Math.floor(Math.abs(diff) / 3600000);
+                const m = Math.floor((Math.abs(diff) % 3600000) / 60000);
+                const s = Math.floor((Math.abs(diff) % 60000) / 1000);
+                let timeStr, cls;
+                if (over) { timeStr = 'OVERDUE';
+                    cls = 'overdue'; } else if (h === 0) { timeStr = `${m}m ${s}s`;
+                    cls = 'fire'; } else if (h < 6) { timeStr = `${h}h ${m}m`;
+                    cls = 'ember'; } else { timeStr = `${h}h ${m}m`;
+                    cls = 'lime'; }
+                return `<div class="dl-item"><div class="pri-dot ${t.priority}"></div><div class="dl-name">${esc(t.name)}</div><div class="dl-time ${cls}">${timeStr}</div></div>`;
+            }).join('');
+            if (!focusRunning) {
+                const sbt = document.getElementById('sidebar-timer');
+                if (sbt) sbt.textContent =
+                    `${Math.floor(focusSeconds/60).toString().padStart(2,'0')}:${(focusSeconds%60).toString().padStart(2,'0')}`;
+            }
+        }
+
+        /* ── habits ── */
+        function renderHabits() {
+            const cont = document.getElementById('habit-row');
+            if (!cont) return;
+            const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+            cont.innerHTML = habits.map(h => `
+            <div class="habit-item">
+              <div class="habit-header">
+                <div class="habit-name" style="color:${h.color}">${h.name}</div>
+                <div class="habit-rate">${h.days.filter(Boolean).length}/7</div>
+              </div>
+              <div style="display:flex;gap:3px;">
+                ${h.days.map((d,i)=>`
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+                    <div class="habit-dot${d?' filled':''}" style="${d?`background:${h.color};`:''}background-opacity:${d?1:.3};"
+                      onclick="toggleHabit('${h.id}',${i})" data-day="${i}"></div>
+                    <div class="habit-day">${days[i]}</div>
+                  </div>`).join('')}
+              </div>
+            </div>`).join('');
+        }
+
+        function toggleHabit(id, dayIdx) {
+            const h = habits.find(x => x.id === id);
+            if (!h) return;
+            h.days[dayIdx] = h.days[dayIdx] ? 0 : 1;
+            persist();
+            renderHabits();
+            updateScoreRing();
+            toast(h.days[dayIdx] ? `✅ ${h.name} habit logged!` : 'Habit unmarked', h.days[dayIdx] ? 'success' : 'info');
+        }
+
+        /* ── filters ── */
+        function setFilter(f, btn) {
+            currentFilter = f;
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderTasks();
+        }
+
+        function filterTasks(f) { currentFilter = f;
+            switchView('dashboard');
+            renderTasks(); }
+
+        function handleSearch(q) { renderTasks(); }
+
+        /* ── navigation ── */
+        const viewTitles = { dashboard: 'Dashboard', chat: 'AI Assistant', kanban: 'Kanban Board', analytics: 'Analytics',
+            add: 'New Task' };
+
+        function switchView(name, railBtn, navBtn) {
+            document.querySelectorAll('.panel').forEach(p => { p.classList.remove('active'); });
+            const panel = document.getElementById(`panel-${name}`);
+            if (panel) {
+                requestAnimationFrame(() => { panel.classList.add('active'); });
+            }
+            setEl('topbar-title', viewTitles[name] || name);
+            if (railBtn) { document.querySelectorAll('.rail-btn').forEach(b => b.classList.remove('active'));
+                railBtn.classList.add('active'); }
+            if (navBtn) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                navBtn.classList.add('active'); }
+            if (name === 'analytics') renderAnalytics();
+            if (name === 'kanban') renderKanban();
+        }
+
+        /* ── save task ── */
+        function selectPriority(btn) {
+            selectedPriority = btn.dataset.pri;
+            document.querySelectorAll('.pri-opt').forEach(b => b.className = 'pri-opt');
+            btn.classList.add(`sel-${selectedPriority}`);
+        }
+
+        function saveTask() {
+            const name = document.getElementById('f-name').value.trim();
+            if (!name) { toast('Please enter a task name', 'error'); return; }
+            const deadline = document.getElementById('f-deadline').value;
+            const task = {
+                id: uid(),
+                name,
+                desc: document.getElementById('f-desc').value.trim(),
+                priority: selectedPriority,
+                cat: document.getElementById('f-cat').value,
+                deadline: deadline ? new Date(deadline).getTime() : null,
+                est: parseInt(document.getElementById('f-time').value) || 60,
+                status: document.getElementById('f-status').value,
+                done: false,
+                created: Date.now(),
+            };
+            tasks.unshift(task);
+            persist();
+            updateAllUI();
+            renderKanban();
+            document.getElementById('f-name').value = '';
+            document.getElementById('f-desc').value = '';
+            document.getElementById('f-deadline').value = '';
+            toast('✅ Task saved!', 'success');
+            switchView('dashboard');
+        }
+
+        /* ── natural language parse ── */
+        async function parseNaturalLanguage() {
+            const input = document.getElementById('nl-input').value.trim();
+            if (!input) { toast('Type something to parse', 'warn'); return; }
+            toast('🪄 Parsing with AI…', 'info');
+
+            const hasKey = settings.apiKey && settings.apiKey.length > 10;
+
+            if (!hasKey) {
+                // Mock parse
+                const words = input.split(' ');
+                const priority = words.some(w => ['critical', 'urgent', 'important'].includes(w.toLowerCase())) ? 'critical' :
+                    words.some(w => ['high', 'priority'].includes(w.toLowerCase())) ? 'high' : 'medium';
+                const cats = ['Academic', 'Work', 'Finance', 'Health', 'Personal'];
+                const cat = cats.find(c => input.toLowerCase().includes(c.toLowerCase())) || 'Personal';
+                document.getElementById('f-name').value = input.slice(0, 60);
+                selectedPriority = priority;
+                document.querySelectorAll('.pri-opt').forEach(b => { b.className = 'pri-opt'; if (b.dataset.pri ===
+                        priority) b.classList.add(`sel-${priority}`); });
+                const catSel = document.getElementById('f-cat');
+                for (let o of catSel.options)
+                    if (o.value === cat) { o.selected = true; break; }
+                document.getElementById('nl-input').value = '';
+                toast('✨ Parsed (mock mode) — fill in remaining details', 'success');
+                return;
+            }
+
+            try {
+                const reply = await callAnthropicAI(
+                    [{ role: 'user', content: `Parse this task into structured JSON. Reply ONLY valid JSON, no markdown.
+            Task: "${input}"
+            Schema: {"name":"string","desc":"string","priority":"critical|high|medium|low","cat":"Academic|Work|Finance|Health|Personal","estMinutes":number,"deadlineOffsetHours":number|null}
+            Rules: deadlineOffsetHours from now (null if unspecified), estMinutes guess.` }],
+                    'You are a task parser. Reply ONLY with valid JSON.', 400
+                );
+                const parsed = JSON.parse(reply.replace(/```json|```/g, '').trim());
+                document.getElementById('f-name').value = parsed.name || input;
+                document.getElementById('f-desc').value = parsed.desc || '';
+                selectedPriority = parsed.priority || 'medium';
+                document.querySelectorAll('.pri-opt').forEach(b => { b.className = 'pri-opt'; if (b.dataset.pri ===
+                        selectedPriority) b.classList.add(`sel-${selectedPriority}`); });
+                const catSel = document.getElementById('f-cat');
+                if (parsed.cat) { for (let o of catSel.options)
+                        if (o.value === parsed.cat) { o.selected = true; break; } }
+                if (parsed.estMinutes) {
+                    const ts = document.getElementById('f-time');
+                    const opts = [15, 30, 60, 120, 240, 480];
+                    const best = opts.reduce((p, c) => Math.abs(c - parsed.estMinutes) < Math.abs(p - parsed.estMinutes) ? c :
+                        p);
+                    for (let o of ts.options)
+                        if (parseInt(o.value) === best) { o.selected = true; break; }
+                }
+                if (parsed.deadlineOffsetHours) {
+                    const dl = new Date(Date.now() + parsed.deadlineOffsetHours * 3600000);
+                    document.getElementById('f-deadline').value = dl.toISOString().slice(0, 16);
+                }
+                document.getElementById('nl-input').value = '';
+                toast('✨ Task auto-filled from AI!', 'success');
+            } catch (e) {
+                toast(`AI parse error: ${e.message}`, 'error');
+            }
+        }
+
+        /* ── AI Insight ── */
+        async function refreshInsight() {
+            const el = document.getElementById('ai-insight-body');
+            if (!el) return;
+            el.textContent = 'Analyzing your patterns…';
+
+            const over = tasks.filter(isOverdue).length;
+            const done = tasks.filter(t => t.done).length;
+            const habitRate = Math.round(habits.reduce((n, h) => n + h.days.filter(Boolean).length, 0) / (habits.length * 7 ||
+                1) * 100);
+
+            const hasKey = settings.apiKey && settings.apiKey.length > 10;
+
+            if (!hasKey) {
+                el.textContent = getMockInsight();
+                return;
+            }
+
+            try {
+                const reply = await callAnthropicAI(
+                    [{ role: 'user', content: `Give a 2-sentence actionable insight for someone with:
+            - ${tasks.length} total tasks, ${over} overdue, ${done} completed
+            - Habit completion: ${habitRate}%
+            - Streak: ${streak.val} days
+            Be specific and motivating. No preamble.` }],
+                    'You are a productivity AI. Be concise and actionable.', 150
+                );
+                el.textContent = reply || getMockInsight();
+            } catch (e) {
+                el.textContent = getMockInsight();
+                toast(`Insight error: ${e.message}`, 'warn');
+            }
+        }
+
+        /* ── AI Chat ── */
+        function setChatMode(mode, btn) {
+            chatMode = mode;
+            document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+        }
+
+        function usePill(btn) { document.getElementById('chat-input').value = btn.textContent;
+            sendMsg(); }
+
+        function autoGrow(el) { el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 100) + 'px'; }
+
+        async function sendMsg() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+            input.style.height = 'auto';
+            document.getElementById('send-btn').disabled = true;
+
+            addMsg('user', text);
+            chatHistory.push({ role: 'user', content: text });
+
+            const typing = addTyping();
+
+            const taskCtx = tasks.slice(0, 12).map(t =>
+                `[${t.done?'✓':'○'}] ${t.name} | ${t.priority} | ${t.cat} | ${t.deadline?formatDeadline(t.deadline):'no deadline'} | ${t.status}`
+            ).join('\n');
+            const habitCtx = habits.map(h => `${h.name}: ${h.days.filter(Boolean).length}/7 days`).join(', ');
+            const over = tasks.filter(isOverdue).length;
+            const done = tasks.filter(t => t.done).length;
+
+            const modePrompts = {
+                assistant: 'Be a friendly, concise productivity companion.',
+                plan: 'You specialize in building structured daily/weekly plans. Create a time-blocked schedule when asked.',
+                coach: 'You are a motivational performance coach. Challenge the user, celebrate wins, and push them.'
+            };
+
+            const systemPrompt = `${modePrompts[chatMode]||modePrompts.assistant}
+
+        USER CONTEXT:
+        Tasks: ${tasks.length} total, ${over} overdue, ${done} done
+        Streak: ${streak.val} days
+        Habits: ${habitCtx}
+
+        TASK LIST:
+        ${taskCtx}
+
+        Rules:
+        - Keep responses under 180 words unless building a plan
+        - Use emojis sparingly
+        - Be direct and action-oriented
+        - Reference specific task names when relevant
+        - If the user seems overwhelmed, help them pick JUST ONE task to start`;
+
+            const hasKey = settings.apiKey && settings.apiKey.length > 10;
+
+            if (!hasKey) {
+                typing.remove();
+                const reply = getMockChatReply(text, chatMode);
+                chatHistory.push({ role: 'assistant', content: reply });
+                DB.save(DB.KEY_HIST, chatHistory.slice(-20));
+                addMsg('ai', reply);
+                document.getElementById('send-btn').disabled = false;
+                return;
+            }
+
+            try {
+                const reply = await callAnthropicAI(
+                    chatHistory.slice(-12),
+                    systemPrompt,
+                    1000
+                );
+                typing.remove();
+                chatHistory.push({ role: 'assistant', content: reply });
+                DB.save(DB.KEY_HIST, chatHistory.slice(-20));
+                addMsg('ai', reply);
+            } catch (e) {
+                typing.remove();
+                const fallback = getMockChatReply(text, chatMode);
+                chatHistory.push({ role: 'assistant', content: fallback });
+                DB.save(DB.KEY_HIST, chatHistory.slice(-20));
+                addMsg('ai', fallback);
+                toast(`AI error: ${e.message}`, 'warn');
+            }
+            document.getElementById('send-btn').disabled = false;
+        }
+
+        function addMsg(role, text) {
+            const msgs = document.getElementById('chat-msgs');
+            const div = document.createElement('div');
+            div.className = `msg-row ${role} fade-up`;
+            const now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `
+            <div class="msg-av">${role==='ai'?'🤖':'👤'}</div>
+            <div>
+              <div class="msg-bub">${text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>')}</div>
+              <div class="msg-time">${now}</div>
+            </div>`;
+            msgs.appendChild(div);
+            msgs.scrollTop = msgs.scrollHeight;
+            return div;
+        }
+
+        function addTyping() {
+            const msgs = document.getElementById('chat-msgs');
+            const div = document.createElement('div');
+            div.className = 'msg-row ai';
+            div.innerHTML =
+                `<div class="msg-av">🤖</div><div class="typing-wrap"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>`;
+            msgs.appendChild(div);
+            msgs.scrollTop = msgs.scrollHeight;
+            return div;
+        }
+
+        /* ── Kanban ── */
+        const COLUMNS = [
+            { key: 'todo', label: 'To Do', color: 'var(--muted)' },
+            { key: 'inprogress', label: 'In Progress', color: 'var(--sky)' },
+            { key: 'review', label: 'In Review', color: 'var(--gold)' },
+            { key: 'done', label: 'Done', color: 'var(--lime)' },
+        ];
+
+        function renderKanban() {
+            const board = document.getElementById('kanban-board');
+            if (!board) return;
+            board.innerHTML = COLUMNS.map(col => {
+                const colTasks = col.key === 'done' ?
+                    tasks.filter(t => t.done) :
+                    tasks.filter(t => !t.done && t.status === col.key);
+                return `
+            <div class="kanban-col" ondragover="event.preventDefault()" ondrop="kanbanDrop(event,'${col.key}')">
+              <div class="kanban-col-head">
+                <div class="kanban-col-name" style="color:${col.color}">${col.label}</div>
+                <div class="kanban-count">${colTasks.length}</div>
+              </div>
+              <div class="kanban-body">
+                ${colTasks.map(t=>`
+                  <div class="kanban-card" draggable="true" ondragstart="event.dataTransfer.setData('taskId','${t.id}')"
+                    onclick="openTaskModal('${t.id}')">
+                    <div class="kanban-card-name">${esc(t.name)}</div>
+                    <div class="kanban-card-meta">
+                      <span class="pri-badge ${t.priority}" style="font-size:9px;">${t.priority}</span>
+                      <span style="font-size:10px;color:var(--muted);">${t.cat}</span>
+                    </div>
+                  </div>`).join('')}
+                ${colTasks.length===0?`<div style="padding:16px;text-align:center;font-size:12px;color:var(--muted);">Drop tasks here</div>`:''}
+              </div>
+            </div>`;
+            }).join('');
+        }
+
+        function kanbanDrop(e, newStatus) {
+            const id = e.dataTransfer.getData('taskId');
+            const t = tasks.find(x => x.id === id);
+            if (!t) return;
+            if (newStatus === 'done') { t.done = true;
+                t.status = 'done'; } else { t.done = false;
+                t.status = newStatus; }
+            persist();
+            updateAllUI();
+            renderKanban();
+            toast(`Moved to ${newStatus}`, 'success');
+        }
+
+        /* ── Analytics ── */
+        function renderAnalytics() {
+            renderBarChart();
+            renderDonut();
+            renderHeatmap();
+            renderPriorityBreakdown();
+        }
+
+        function renderBarChart() {
+            const cont = document.getElementById('bar-chart');
+            if (!cont) return;
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const maxVal = Math.max(...weekStats, 1);
+            cont.innerHTML = weekStats.map((v, i) => {
+                const pct = Math.round((v / maxVal) * 100);
+                const isToday = i === (new Date().getDay() + 6) % 7;
+                return `<div class="bar-wrap">
+              <div class="bar-val">${v}</div>
+              <div class="bar-container">
+                <div class="bar-fill" style="height:${pct}%;background:${isToday?'var(--grad-ai)':'rgba(139,92,246,.5)'};"></div>
+              </div>
+              <div class="bar-label" style="${isToday?'color:var(--lavender);':''}">${days[i]}</div>
+            </div>`;
+            }).join('');
+        }
+
+        function renderDonut() {
+            const svg = document.getElementById('donut-svg');
+            const leg = document.getElementById('donut-legend');
+            if (!svg || !leg) return;
+            const cats = {};
+            tasks.forEach(t => { cats[t.cat] = (cats[t.cat] || 0) + 1; });
+            const total = Object.values(cats).reduce((a, b) => a + b, 0) || 1;
+            const colors = { 'Academic': '#8B5CF6', 'Work': '#38C4F0', 'Finance': '#F5C842', 'Health': '#3DDD8A',
+                'Personal': '#F472B6' };
+            let cumulAngle = 0;
+            const r = 35,
+                cx = 50,
+                cy = 50;
+            let paths = '';
+            Object.entries(cats).forEach(([cat, count]) => {
+                const angle = (count / total) * 360;
+                const startAngle = cumulAngle;
+                const endAngle = cumulAngle + angle;
+                const x1 = cx + r * Math.cos(startAngle * Math.PI / 180 - Math.PI / 2);
+                const y1 = cy + r * Math.sin(startAngle * Math.PI / 180 - Math.PI / 2);
+                const x2 = cx + r * Math.cos(endAngle * Math.PI / 180 - Math.PI / 2);
+                const y2 = cy + r * Math.sin(endAngle * Math.PI / 180 - Math.PI / 2);
+                const large = angle > 180 ? 1 : 0;
+                paths +=
+                    `<path d="M${cx},${cy} L${x1},${y1} A${r},${r},0,${large},1,${x2},${y2}Z" fill="${colors[cat]||'#555'}"/>`;
+                cumulAngle += angle;
+            });
+            svg.innerHTML = `<circle cx="50" cy="50" r="20" fill="#121528"/>${paths}`;
+            leg.innerHTML = Object.entries(cats).map(([cat, count]) =>
+                `<div class="legend-item"><div class="legend-dot" style="background:${colors[cat]||'#555'}"></div><span style="color:var(--body);">${cat}</span><span style="color:var(--muted);margin-left:4px;">${count}</span></div>`
+            ).join('');
+        }
+
+        function renderHeatmap() {
+            const cont = document.getElementById('heatmap');
+            if (!cont) return;
+            const levels = ['', 'h1', 'h2', 'h3', 'h4'];
+            cont.innerHTML = Array.from({ length: 28 }, (_, i) => {
+                const lvl = Math.floor(Math.random() * 5);
+                const date = new Date(Date.now() - (27 - i) * 86400000).toLocaleDateString();
+                return `<div class="heat-cell ${levels[lvl]}" data-val="${lvl*2} tasks · ${date}"></div>`;
+            }).join('');
+        }
+
+        function renderPriorityBreakdown() {
+            const cont = document.getElementById('priority-breakdown');
+            if (!cont) return;
+            const pris = { critical: 0, high: 0, medium: 0, low: 0 };
+            tasks.forEach(t => { pris[t.priority] = (pris[t.priority] || 0) + 1; });
+            const total = tasks.length || 1;
+            const colors = { critical: 'var(--fire)', high: 'var(--ember)', medium: 'var(--lavender)',
+            low: 'var(--lime)' };
+            cont.innerHTML = Object.entries(pris).map(([p, n]) => `
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
+                <span style="color:${colors[p]};font-weight:600;text-transform:capitalize;">${p}</span>
+                <span style="color:var(--muted);">${n} tasks</span>
+              </div>
+              <div style="height:6px;background:var(--edge);border-radius:99px;overflow:hidden;">
+                <div style="height:100%;width:${Math.round(n/total*100)}%;background:${colors[p]};border-radius:99px;transition:width .6s;"></div>
+              </div>
+            </div>`).join('');
+        }
+
+        /* ── Pomodoro ── */
+        function openFocusMode() {
+            document.getElementById('focusOverlay').classList.add('visible');
+            renderPomDots();
+        }
+
+        function closeFocusMode() {
+            document.getElementById('focusOverlay').classList.remove('visible');
+        }
+
+        function startFocusOnTask(id) {
+            const t = tasks.find(x => x.id === id);
+            if (t) { focusTaskName = t.name;
+                setEl('focusTaskName', t.name); }
+            openFocusMode();
+        }
+
+        function toggleFocusTimer() {
+            if (focusRunning) { pauseFocusTimer(); } else { startFocusTimer(); }
+        }
+
+        function startFocusTimer() {
+            focusRunning = true;
+            document.getElementById('focusOvBtn').textContent = '⏸ Pause';
+            document.getElementById('focusBigTimer').classList.add(focusBreak ? 'break-mode' : '');
+            document.getElementById('sidebar-timer').classList.add(focusBreak ? 'break-mode' : 'running');
+            focusInterval = setInterval(() => {
+                focusSeconds--;
+                updateFocusDisplay();
+                const prog = document.getElementById('sidebar-progress');
+                if (prog) prog.style.width = `${((focusTotal-focusSeconds)/focusTotal)*100}%`;
+                if (focusSeconds <= 0) {
+                    clearInterval(focusInterval);
+                    focusRunning = false;
+                    if (!focusBreak) {
+                        focusPomodoros++;
+                        renderPomDots();
+                        toast(`🍅 Pomodoro ${focusPomodoros} complete! Take a break.`, 'success');
+                        focusBreak = true;
+                        focusSeconds = 5 * 60;
+                        focusTotal = 5 * 60;
+                        document.getElementById('focusModeLabel').textContent = 'Break Time ☕';
+                        document.getElementById('focusBigTimer').className = 'focus-big-timer break';
+                    } else {
+                        toast('Break over — back to focus!', 'info');
+                        focusBreak = false;
+                        focusSeconds = 25 * 60;
+                        focusTotal = 25 * 60;
+                        document.getElementById('focusModeLabel').textContent = 'Focus Session';
+                        document.getElementById('focusBigTimer').className = 'focus-big-timer';
+                    }
+                    document.getElementById('focusOvBtn').textContent = '▶ Start';
+                    document.getElementById('sidebar-timer').className = 'focus-timer-display';
+                    updateFocusDisplay();
+                    const p = document.getElementById('sidebar-progress');
+                    if (p) p.style.width = '0%';
+                }
+            }, 1000);
+        }
+
+        function pauseFocusTimer() {
+            clearInterval(focusInterval);
+            focusRunning = false;
+            document.getElementById('focusOvBtn').textContent = '▶ Resume';
+        }
+
+        function skipFocusPhase() {
+            clearInterval(focusInterval);
+            focusRunning = false;
+            focusBreak = !focusBreak;
+            focusSeconds = focusBreak ? 5 * 60 : 25 * 60;
+            focusTotal = focusSeconds;
+            document.getElementById('focusOvBtn').textContent = '▶ Start';
+            document.getElementById('focusModeLabel').textContent = focusBreak ? 'Break Time ☕' : 'Focus Session';
+            document.getElementById('focusBigTimer').className = 'focus-big-timer' + (focusBreak ? ' break' : '');
+            updateFocusDisplay();
+        }
+
+        function resetFocusTimer() {
+            clearInterval(focusInterval);
+            focusRunning = false;
+            focusBreak = false;
+            focusSeconds = 25 * 60;
+            focusTotal = 25 * 60;
+            document.getElementById('focusOvBtn').textContent = '▶ Start';
+            document.getElementById('focusModeLabel').textContent = 'Focus Session';
+            document.getElementById('focusBigTimer').className = 'focus-big-timer';
+            updateFocusDisplay();
+            const p = document.getElementById('sidebar-progress');
+            if (p) p.style.width = '0%';
+        }
+
+        function updateFocusDisplay() {
+            const m = Math.floor(focusSeconds / 60).toString().padStart(2, '0');
+            const s = (focusSeconds % 60).toString().padStart(2, '0');
+            const str = `${m}:${s}`;
+            setEl('focusBigTimer', str);
+            setEl('sidebar-timer', str);
+        }
+
+        function renderPomDots() {
+            const cont = document.getElementById('focusPomodoros');
+            if (!cont) return;
+            cont.innerHTML = Array.from({ length: 4 }, (_, i) =>
+                `<div class="pom-dot${i<focusPomodoros?' done':''}"></div>`).join('');
+        }
+
+        /* ── export ── */
+        function exportData() {
+            const data = { tasks, habits, streak, exported: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `lifesaver_export_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            toast('📦 Data exported as JSON', 'success');
+        }
+
+        /* ── toast ── */
+        function toast(msg, type = 'info', duration = 3000) {
+            const stack = document.getElementById('toastStack');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<span>${msg}</span>`;
+            stack.appendChild(el);
+            requestAnimationFrame(() => { requestAnimationFrame(() => el.classList.add('show')); });
+            setTimeout(() => { el.classList.remove('show');
+                setTimeout(() => el.remove(), 400); }, duration);
+        }
+
+        /* ── launch ── */
+        init();
+    </script>
+
+</body>
+</html>
